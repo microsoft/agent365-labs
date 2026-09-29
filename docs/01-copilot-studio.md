@@ -1,5 +1,7 @@
 # Lab A365-01 - Copilot Studio agent with the GitHub Copilot harness
 
+**Main flow: 1. Copilot Studio → [2. SDK requirements](./00-prerequisites.md) → [3. .NET](./02a-web-obo-dotnet.md)**
+
 > **Path**: Browser-first, Copilot Studio new experience, GitHub Copilot runtime harness  
 > **Duration**: around 60-90 minutes, plus administrator prework and telemetry indexing  
 > **Level**: Beginner to intermediate
@@ -23,7 +25,7 @@ After completing this lab, you will be able to:
 
 ## Prerequisites
 
-Use the prerequisites below for this lab. The [shared prerequisites page](./00-prerequisites.md) covers the custom web-app labs in Path 2.
+Use the prerequisites below for this lab. You will complete the [SDK requirements](./00-prerequisites.md) after this lab, before continuing to .NET.
 
 You need a browser. You do not need the GitHub Copilot CLI, Agent 365 CLI, PAC, a local agent project, or an Azure OpenAI resource.
 
@@ -157,7 +159,7 @@ Keep the bot ID separate from the Entra application/client ID, the Entra object 
 
 ## Exercise 2: Add a real MCP tool and a native runtime skill
 
-The tool connects to Microsoft Learn. The [skill](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/skills-overview) contains instructions for using it. This is a native skill created in the builder, separate from the coding-assistant skills used in Path 2.
+The tool connects to Microsoft Learn. The [skill](https://learn.microsoft.com/microsoft-copilot-studio/agents-experience/skills-overview) contains instructions for using it. This is a native skill created in the builder, separate from the coding-assistant skills used in the SDK labs.
 
 ### Step 1: Add the Microsoft Learn MCP server
 
@@ -322,4 +324,6 @@ If either portal check is blocked, record the result as partial completion with 
 
 For extra test turns after this lab, see the [sample prompts](99-sample-prompts.md).
 
-<cc-next label="Continue with the Agent 365 SDK labs" url="../00-prerequisites/"></cc-next>
+Next, complete the [SDK requirements](./00-prerequisites.md), then continue to the [.NET lab](./02a-web-obo-dotnet.md).
+
+<cc-next label="Continue to SDK requirements" url="../00-prerequisites/"></cc-next>

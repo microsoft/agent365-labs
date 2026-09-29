@@ -1,10 +1,10 @@
 # Sample prompts
 
-Use the prompts for your lab path to produce the activity described below.
+Use the prompts for your current lab to produce the activity described below.
 
 Some evidence is immediate, such as a Copilot Studio Preview activity trace. Tenant-facing surfaces such as Microsoft Defender and the Microsoft 365 admin center can take several minutes or longer to reflect new activity, especially after tenant onboarding or connector changes.
 
-## Path 1: Copilot Studio agent with the GitHub Copilot runtime harness
+## Copilot Studio agent with the GitHub Copilot runtime harness
 
 These prompts are for [Lab A365-01](./01-copilot-studio.md). Run them in Preview, then optionally in the published Teams agent if you have published it separately. Record the time of each test.
 
@@ -42,9 +42,9 @@ If you have published the agent separately, run these from a **published Teams c
 
 **Expected observable signal:** the agent may still produce `InvokeAgent` rows for these turns. A refusal is still activity. Do not expect a tool call for every out-of-scope question.
 
-## Path 2: Agent 365 SDK and web app agent with user OBO
+## Agent 365 SDK and web app agent with user OBO
 
-These prompts exercise the finished agent from any of the three web on-behalf-of labs, a Microsoft Learn research assistant onboarded to Agent 365.
+These prompts exercise the finished agent from the [.NET lab](./02a-web-obo-dotnet.md), a Microsoft Learn research assistant onboarded to Agent 365. They also apply to the optional [Python](./02b-web-obo-python.md) and [JavaScript / Node.js](./02c-web-obo-nodejs.md) labs, subject to the Work IQ limitation below.
 
 ### Category 1: Basic research, which proves the core loop
 
