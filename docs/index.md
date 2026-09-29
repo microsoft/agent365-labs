@@ -151,7 +151,7 @@ Use these labs to learn the onboarding path end to end on a known sample. Use th
 
 ## Feedback
 
-These labs are under active development. [Open an issue](https://github.com/qmatteoq/agent365-labs/issues) if a step does not work, if a portal has moved, or if a warning would have saved you time.
+These labs are under active development. [Open an issue](https://github.com/microsoft/agent365-labs/issues) if a step does not work, if a portal has moved, or if a warning would have saved you time.
 
 ## Disclaimer
 

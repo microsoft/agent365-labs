@@ -1,8 +1,8 @@
 site_name: Agent 365 Labs
 site_description: Hands-on labs that onboard a working agent into Microsoft Agent 365.
-site_url: https://qmatteoq.github.io/agent365-labs
-repo_url: https://github.com/qmatteoq/agent365-labs
-repo_name: qmatteoq/agent365-labs
+site_url: https://microsoft.github.io/agent365-labs
+repo_url: https://github.com/microsoft/agent365-labs
+repo_name: microsoft/agent365-labs
 edit_uri: ''                    # Disable edit button
 
 theme:

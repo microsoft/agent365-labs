@@ -1,6 +1,6 @@
 # Agent 365 Labs
 
-📖 **Read the labs at [qmatteoq.github.io/agent365-labs](https://qmatteoq.github.io/agent365-labs)**
+📖 **Read the labs at [microsoft.github.io/agent365-labs](https://microsoft.github.io/agent365-labs)**
 
 Hands-on labs for [**Microsoft Agent 365**](https://learn.microsoft.com/microsoft-agent-365/). Start by building a Copilot Studio agent with built-in observability, prepare the SDK requirements, then register and instrument a custom .NET web agent.
 
