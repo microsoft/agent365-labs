@@ -1,4 +1,7 @@
-# Lab A365-02C - Web App Agent with User OBO (Node.js)
+# Optional Lab A365-02C - Web App Agent with User OBO (JavaScript / Node.js)
+
+!!! info "Optional lab"
+    This lab is not required to complete the main flow: [Copilot Studio](./01-copilot-studio.md) → [SDK requirements](./00-prerequisites.md) → [.NET](./02a-web-obo-dotnet.md). Take it afterward if you want to explore the JavaScript ecosystem. The sample runs on Node.js and uses TypeScript source.
 
 > **Stack**: Node.js 20.10, TypeScript, LangChain, Express **Duration**: around 3 hours **Level**: Intermediate
 

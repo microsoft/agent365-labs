@@ -1,4 +1,7 @@
-# Lab A365-02B - Web App Agent with User OBO (Python)
+# Optional Lab A365-02B - Web App Agent with User OBO (Python)
+
+!!! info "Optional lab"
+    This lab is not required to complete the main flow: [Copilot Studio](./01-copilot-studio.md) → [SDK requirements](./00-prerequisites.md) → [.NET](./02a-web-obo-dotnet.md). Take it afterward if you want to explore the SDK with Python.
 
 > **Stack**: Python 3.12, LangChain, FastAPI **Duration**: around 3 hours **Level**: Intermediate
 

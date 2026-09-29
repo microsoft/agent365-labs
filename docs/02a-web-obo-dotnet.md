@@ -1,5 +1,7 @@
 # Lab A365-02A - Web App Agent with User OBO (.NET)
 
+**Main flow: [1. Copilot Studio](./01-copilot-studio.md) → [2. SDK requirements](./00-prerequisites.md) → 3. .NET**
+
 > **Stack**: .NET 8, Microsoft Agent Framework, Blazor Server **Duration**: around 3 hours **Level**: Intermediate
 
 ## Scenario
@@ -29,7 +31,7 @@ After completing this lab, you will be able to:
 
 ## Prerequisites
 
-Work through the [prerequisites page](./00-prerequisites.md) before you start. In short, you need the .NET 8 SDK, the Agent 365 CLI, an Azure OpenAI resource, a tenant with Agent 365 enabled and at least one Agent 365 licence in it, and access to an administrator who can grant consent twice.
+After the [Copilot Studio lab](./01-copilot-studio.md), work through the [SDK requirements](./00-prerequisites.md) before you start. In short, you need the .NET 8 SDK, the Agent 365 CLI, an Azure OpenAI resource, a tenant with Agent 365 enabled and at least one Agent 365 licence in it, and access to an administrator who can grant consent twice.
 
 The starting point for this lab is the .NET sample agent:
 
@@ -805,13 +807,17 @@ You have completed **Lab A365-02A**. You started with an ordinary web agent and 
 
 ✅ **Verification**: reading the exporter's logs, and interpreting the difference between Defender and admin center results.
 
+### Main flow complete
+
+With Copilot Studio, the SDK requirements, and this .NET lab complete, you have finished the main lab flow. You can stop here. The [Python](./02b-web-obo-python.md) and [JavaScript / Node.js](./02c-web-obo-nodejs.md) labs are optional extensions if you want to explore another stack.
+
 ### Related resources
 
 | Resource | Link |
 | --- | --- |
 | Sample prompts | [99-sample-prompts.md](./99-sample-prompts.md) |
-| The same lab in Python | [02b-web-obo-python.md](./02b-web-obo-python.md) |
-| The same lab in Node.js | [02c-web-obo-nodejs.md](./02c-web-obo-nodejs.md) |
+| Optional: the same lab in Python | [02b-web-obo-python.md](./02b-web-obo-python.md) |
+| Optional: the same lab in JavaScript / Node.js | [02c-web-obo-nodejs.md](./02c-web-obo-nodejs.md) |
 | Agent on-behalf-of OAuth flow | https://learn.microsoft.com/entra/agent-id/agent-on-behalf-of-oauth-flow |
 | Agent 365 observability concepts | https://learn.microsoft.com/microsoft-agent-365/developer/observability-concepts |
 | Agent 365 Skills | https://github.com/microsoft/agent365-skills |
