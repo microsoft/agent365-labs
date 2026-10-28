@@ -47,7 +47,7 @@ Invoke-WebRequest `
 
 **Run the installer**
 
-Open Windows PowerShell or PowerShell 7, switch to the download folder, and preview the changes:
+Open Windows PowerShell or PowerShell 7, switch to the download folder, and preview the changes. If PowerShell blocks the script, follow **If PowerShell blocks the unsigned script** below, then retry.
 
 ```powershell
 Set-Location (Join-Path $HOME 'Downloads')
@@ -71,6 +71,43 @@ Then run the installer for the labs you plan to take:
 ```
 
 Run only the command that matches your chosen labs. If you already cloned the repository, you can skip the download and run `.\docs\scripts\Install-SdkRequirements.ps1` from the repository root with the same switches.
+
+**If PowerShell blocks the unsigned script**
+
+The lab installer is not digitally signed. Windows may block a downloaded script with an error such as **"is not digitally signed"** or **"running scripts is disabled on this system"**. `-WhatIf` does not bypass this check.
+
+1. Review `Install-SdkRequirements.ps1` in a text editor and confirm that it came from this repository or your trusted lab facilitator. Only continue if your organization's policy permits running this reviewed, unsigned script.
+2. In the **same PowerShell terminal** where you will run the installer, inspect the effective policy and its scopes:
+
+   ```powershell
+   Get-ExecutionPolicy
+   Get-ExecutionPolicy -List
+   ```
+
+   If `MachinePolicy` or `UserPolicy` is not `Undefined`, your administrator manages execution policy through Group Policy. Do not try to override it; ask for an approved way to run the installer, such as a signed copy. Also stop if your organization requires signed scripts or another security control blocks execution.
+
+3. If permitted and the effective policy is `Restricted` or `AllSigned`, allow local or explicitly unblocked scripts for **this terminal session only**:
+
+   ```powershell
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+   Get-ExecutionPolicy
+   ```
+
+   Confirm the policy-change prompt if shown. The effective policy should now be `RemoteSigned`. This does not require an administrator terminal or change the saved `CurrentUser` or `LocalMachine` settings. Closing this terminal removes the session policy. If the effective policy does not change, stop and contact your administrator.
+
+4. With `RemoteSigned`, a browser-downloaded unsigned file may still be blocked because Windows marks it as coming from the internet. After reviewing it, unblock **only this file**, then preview the installer again:
+
+   ```powershell
+   Set-Location (Join-Path $HOME 'Downloads')
+   Unblock-File -LiteralPath '.\Install-SdkRequirements.ps1'
+   .\Install-SdkRequirements.ps1 -WhatIf
+   ```
+
+   `Unblock-File` permanently removes the internet-zone mark from that file; it does not sign it or change execution policy. If using a repository clone, stay in the repository root and use `.\docs\scripts\Install-SdkRequirements.ps1` for both commands instead.
+
+5. Run the installation command for your chosen labs from the examples above in this same terminal. Close the terminal when finished.
+
+Do not set a machine-wide `Bypass` or `Unrestricted` policy to run the lab. If execution is still blocked, share the error and the output of `Get-ExecutionPolicy -List` with your administrator rather than disabling additional controls. See Microsoft's [PowerShell execution policy documentation](https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_execution_policies) for policy precedence and unsigned-script behavior.
 
 The script installs .NET SDK 10 for all participants, which also satisfies the Agent 365 CLI requirement. Existing tools that meet the minimum version are left in place; the Agent 365 CLI is installed or updated, and the Az module is installed for the current user in PowerShell 7 if missing. For tools listed as "latest" above, use your organization's normal update process to keep existing installations current.
 
