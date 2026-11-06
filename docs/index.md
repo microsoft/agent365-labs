@@ -93,7 +93,7 @@ The first lab, Copilot Studio, moves through five stages:
 | 4 | Generate an authenticated same-tenant run and check Activity | Evidence for the test period in the Microsoft 365 admin center, or partial-completion notes if that surface stays incomplete |
 | 5 | Hunt the traces in Defender | Matching invocation and Microsoft Learn tool events for the same conversation and time window |
 
-After the SDK requirements, the .NET lab follows these six exercises. The optional Python and JavaScript labs follow the same structure, with the Python Work IQ limitation noted above.
+After the SDK requirements, the .NET lab follows these seven exercises. The optional Python and JavaScript labs follow the same structure for exercises 1 to 6, with the Python Work IQ limitation noted above.
 
 | # | Exercise | What you have at the end |
 | --- | --- | --- |
@@ -103,6 +103,7 @@ After the SDK requirements, the .NET lab follows these six exercises. The option
 | 4 | Instrument the agent for observability | OpenTelemetry and the Agent 365 exporter emitting semantic spans per turn |
 | 5 | Give the agent access to Microsoft 365 data | Mail, Calendar and more through the Work IQ MCP servers, as the signed-in user |
 | 6 | Verify it end to end | Activity confirmed in Microsoft Defender and the Microsoft 365 admin center |
+| 7 | See Defender react to a risky agent | A Defender alert for a prompt-injection attack, and an email notification when it happens again |
 
 ## Before you start
 
