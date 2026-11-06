@@ -1,6 +1,6 @@
 # Lab A365-01 - Copilot Studio agent with the GitHub Copilot harness
 
-**Main flow: 1. Copilot Studio → [2. SDK requirements](./00-prerequisites.md) → [3. .NET](./02a-web-obo-dotnet.md)**
+**Main flow: 1. Copilot Studio →** [**2. SDK requirements**](./00-prerequisites.md) **→** [**3. .NET**](./02a-web-obo-dotnet.md)
 
 > **Path**: Browser-first, Copilot Studio new experience, GitHub Copilot runtime harness  
 > **Duration**: around 60-90 minutes, plus administrator prework and telemetry indexing  
@@ -77,89 +77,6 @@ Ask your security administrator to complete this [Defender onboarding](https://l
 10. Click on the value in the **Status** column and, under **Last health check**, click **Test now**. This will force the sync of the connector.
 11. It will take a while now for the integration to be completed, but in the meantime you can continue the rest of the lab.
 
-### Copilot Studio real-time protection
-
-This step connects Copilot Studio to Defender for tool-invocation checks. It connects the Copilot Studio orchestrator to Defender as an external threat-detection provider. Before a tool runs, Defender can evaluate the proposed action using conversation context, prior tool outputs, and tool arguments—for example, to detect an attempt to exfiltrate sensitive information.
-
-We are leaving this steps for your own knowledge, but we won't need to follow them for the lab. It's not needed to observe the agent's telemetry in Microsoft Admin Center and in Microsoft Defender. You can skip directly to the agent creation in Exercise 1.
-
-1. In Defender, open **Settings** > **Security for AI** > **Get started** > **Copilot Studio**.
-2. In **Copilot Studio real-time protection**, turn **Real-time protection** **On**.
-3. Under **Enable Power Platform Integration**, copy the supplied URL and save it for later.
-
-**B. Prepare the integration app**
-
-You need permission to register an application and manage its federated credentials. An **Application Developer** can register an app; its owner or an administrator with appropriate application-management permissions can configure the credential.
-You will use these values during setup:
-
-| Value | Where it is used |
-| --- | --- |
-| Integration **Application (client) ID** | Power Platform's **Azure Entra App ID** and Defender's **App ID** |
-| **Directory (tenant) ID** | Federated credential issuer and encoded subject |
-| Defender's integration endpoint URL | Power Platform's **Endpoint link** and encoded subject |
-
-Use the integration app's **Application (client) ID** for the integration App ID fields. The app's **Object ID**, the lab agent's bot ID, and the environment ID identify different objects.
-
-1. In the [Azure portal](https://portal.azure.com), open **Microsoft Entra ID** > **App registrations** > **New registration**.
-2. Give the integration a descriptive name, such as `Copilot Studio Defender Integration`, and choose the **single-tenant** account option for your organization.
-3. Select **Register**. From **Overview**, record the **Application (client) ID** and **Directory (tenant) ID**.
-4. In PowerShell, replace both placeholders below and run the block. It only calculates credential values locally; it does not create or change tenant resources.
-
-   ```powershell
-   $tenantId = '<Directory (tenant) ID>'
-   $endpoint = '<Enable Power Platform Integration URL from Defender>'
-
-   $T = [Convert]::ToBase64String(([guid]$tenantId).ToByteArray()).Replace('+', '-').Replace('/', '_').TrimEnd('=')
-   $E = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($endpoint)).Replace('+', '-').Replace('/', '_').TrimEnd('=')
-
-   [pscustomobject]@{
-       Issuer = "https://login.microsoftonline.com/$tenantId/v2.0"
-       Subject = "/eid1/c/pub/t/$T/a/m1WPnYRZpEaQKq1Cceg--g/$E"
-       Audience = 'api://AzureADTokenExchange'
-   } | Format-List
-   ```
-
-   The tenant value is encoded from **GUID bytes**, not the tenant ID's text. The endpoint is encoded from its **UTF-8 bytes**. Do not change the fixed `m1WPnYRZpEaQKq1Cceg--g` segment or substitute the integration App ID there. These values follow the [manual credential setup](https://learn.microsoft.com/microsoft-copilot-studio/external-security-provider#step-1-configure-a-microsoft-entra-application).
-
-5. In the integration app, open **Certificates & secrets** > **Federated credentials** > **Add credential**.
-6. Select **Other issuer** as the scenario. Enter the calculated **Issuer**, select **Explicit subject identifier**, and enter the calculated **Subject** in **Value**. If **Audience** is shown, use `api://AzureADTokenExchange`.
-7. Give the credential a name, such as `CopilotStudioDefender`, and select **Add**.
-
-**Checkpoint:** the credential is listed on the integration app's **Federated credentials** tab. This confirms creation, not yet a working provider connection. You do not need a client secret for this federation setup.
-
-**C. Power Platform administrator: connect the lab environment**
-
-1. Open the [Power Platform admin center](https://aka.ms/ppac).
-2. Open **Security** > **Threat detection** > **Additional threat detection**.
-3. Select the environment containing the lab agent, then **Set up**.
-4. Select **Allow Copilot Studio to share data with a threat detection provider**.
-5. In **Azure Entra App ID**, enter the integration app's **Application (client) ID**.
-6. In **Endpoint link**, paste the **same unchanged URL** copied from Defender and used to calculate the credential subject.
-7. Under **Set error behavior**, select the option approved by your security administrator. **Allow the agent to respond** is the default; **Block the query** prevents a response if the provider fails or exceeds its one-second response deadline.
-8. Select **Save**. Reopen the configuration and confirm the expected app ID and endpoint.
-
-The configuration applies only to the selected environment. It is not automatically enabled in other or newly created environments.
-
-**Defender administrator: finish the connection**
-
-1. Return to **Copilot Studio real-time protection** in Defender.
-2. In **App ID**, enter the **same integration Application (client) ID** saved in Power Platform.
-3. Select **Save**.
-4. Return to **Get started** and confirm **Copilot Studio** is **Connected**. A recently changed Power Platform app ID can take up to one minute to propagate before Defender validates it.
-
-**If setup fails**
-
-| Symptom | What the administrators should check |
-| --- | --- |
-| Power Platform cannot acquire a token | Correct tenant and client ID; credential on the correct app; issuer; GUID-byte encoding; exact endpoint; audience; accidental whitespace |
-| `AADSTS700016` | Application ID or tenant is incorrect |
-| `AADSTS70025` | The specified app has no federated credential |
-| Provider connection error | Exact endpoint and provider availability; select **Copy error info** for investigation |
-| Application ID does not match the registered application for webhook access | Confirm both portals use the integration client ID and the provider has authorized that app. If saving is blocked, select **Copy error info** and share the details with your administrators or provider |
-
-See the [external-provider troubleshooting guide](https://learn.microsoft.com/microsoft-copilot-studio/external-security-provider#troubleshooting). A credential can save successfully while containing an incorrect subject.
-
-**Connected is not proof of blocking.** Defender's built-in **Default** runtime-protection rule audits; blocking depends on the configured rules. See [runtime-protection behavior](https://learn.microsoft.com/defender-xdr/security-for-ai/ai-agent-real-time-protection). The external-provider documentation describes generative orchestration but does not explicitly confirm coverage of this lab's GitHub Copilot harness **Preview** path. Have your administrator confirm that coverage separately; neither a successful Preview turn nor the **Connected** status proves inline enforcement.
 
 ## Exercise 1: Create the agent in the new experience
 
@@ -199,19 +116,6 @@ Operating rules:
 
 Save the agent using the Save icon in the top right corner. The instructions ask the agent to use the skill and tools you add next. The runtime decides when to call them; Exercise 3 checks that it does.
 
-### Step 4: Record the environment id and bot id
-
-1. Copy the **environment id** from the browser URL.
-2. Copy the **bot id** GUID from the current agent URL.
-3. Add both to your notes.
-
-For example, let's say the URL you see in the browser is the following one:
-
-```text
-https://copilotstudio.microsoft.com/environments/Default-cb9395c5-863d-43f4-9241-0629d63bf2fa/agents/caaafffe-af81-4c7a-9869-0dcd8b192f58
-```
-
-The environment id is Default-cb9395c5-863d-43f4-9241-0629d63bf2fa. The bot id is caaafffe-af81-4c7a-9869-0dcd8b192f58.
 
 > ✅ **Checkpoint.** The agent uses the GitHub Copilot harness, has the supplied instructions and a short unique name, and you have recorded its environment and bot IDs.
 
@@ -284,7 +188,7 @@ Click on **Publish** in the top right corner, then **Publish agent**. Wait until
 ### Step 2: Run an authenticated Preview turn in maker view
 
 1. Open **Preview**.
-2. Ensure the **End user preview** toggle is **Off** so the maker activity trace stays visible alongside the chat.
+2. Ensure the **Debug** toggle is **On** so the maker activity trace stays visible alongside the chat.
 3. Start a fresh Preview conversation while signed in to the lab tenant.
 
 **What you type**
