@@ -65,20 +65,13 @@
             if (this.#url) {
                 this.#containerElement = document.createElement('div');
 
-                const nextButton = document.createElement('button');
+                const nextButton = document.createElement('a');
                 nextButton.textContent = this.#label;
-                nextButton.className = 'github-button';
-                nextButton.onclick = this.#clickHandler;
+                nextButton.className = 'md-button md-button--primary';
+                nextButton.href = this.#url;
                 this.#containerElement.appendChild(nextButton);
 
                 this.replaceChildren(this.#containerElement);
-            }
-        }
-
-        // Button click event handler
-        #clickHandler(e) {
-            if (this.#url) {
-                window.location.href = this.#url;
             }
         }
 
@@ -156,10 +149,6 @@
             return this.#getNextUrlByNavigation();
         }
 
-        // Run when the element is added to the DOM
-        async connectedCallback() {
-            this.onclick = this.#clickHandler;
-        }
     }
     //#endregion
 

@@ -130,6 +130,8 @@ The site is served at `http://127.0.0.1:8000/agent365-labs/`. Pushing to `main` 
 
 The theme and the `cc-card` and `cc-next` widgets are adapted from the [Copilot Developer Camp](https://github.com/microsoft/copilot-camp), used under the MIT License.
 
+Shared reading, link, focus, and navigation styles live in `docs/stylesheets/extra.css`; lab card layout lives in `docs/stylesheets/labStyles.css`. Cards follow the site's configured light theme rather than the operating system's color preference. Both widgets use native links for keyboard navigation and opening labs in a new tab.
+
 ## Where the SDK sample agents come from
 
 The .NET and Python starting points are included in this repository under [`samples/dotnet`](./samples/dotnet/) and [`samples/python`](./samples/python/). Clone this repository and open the .NET sample for the main flow:

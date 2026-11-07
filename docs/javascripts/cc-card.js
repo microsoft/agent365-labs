@@ -42,6 +42,9 @@
             this.#linkElement.href = this.href;
             this.#linkElement.target = this.target;
             this.#linkElement.className = 'cc-card-link';
+            if (this.target === '_blank') {
+                this.#linkElement.rel = 'noopener noreferrer';
+            }
 
             // Create the card container
             this.#cardElement = document.createElement('div');
@@ -75,38 +78,8 @@
             this.#cardElement.appendChild(contentElement);
             this.#linkElement.appendChild(this.#cardElement);
 
-            // Add hover and click effects
-            this.#addInteractions();
-
             // Replace the element's content with the card
             this.replaceChildren(this.#linkElement);
-        }
-
-        #addInteractions() {
-            // Add keyboard navigation support
-            this.#linkElement.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.#linkElement.click();
-                }
-            });
-
-            // Add visual feedback on interaction
-            this.#linkElement.addEventListener('mouseenter', () => {
-                this.#cardElement.classList.add('cc-card-hover');
-            });
-
-            this.#linkElement.addEventListener('mouseleave', () => {
-                this.#cardElement.classList.remove('cc-card-hover');
-            });
-
-            this.#linkElement.addEventListener('focus', () => {
-                this.#cardElement.classList.add('cc-card-focus');
-            });
-
-            this.#linkElement.addEventListener('blur', () => {
-                this.#cardElement.classList.remove('cc-card-focus');
-            });
         }
 
         // Method to update card content dynamically
@@ -170,8 +143,6 @@
             // Apply grid styles
             if (this.columns) {
                 gridElement.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;
-            } else {
-                gridElement.style.gridTemplateColumns = 'repeat(auto-fit, minmax(280px, 1fr))';
             }
             gridElement.style.gap = this.gap;
 
