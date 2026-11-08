@@ -130,6 +130,7 @@ The SDK labs do most of the Agent 365 work by asking an AI coding assistant to d
 | [`samples/`](./samples/README.md) | Local .NET and Python starting points, with source provenance |
 | `mkdocs.yml` | Documentation site configuration |
 | `docs/stylesheets`, `docs/javascripts` | Site theme and widgets |
+| `docs/videos` | Narrated Defender setup and Copilot Studio walkthrough MP4s, embedded in A365-01 |
 
 ## Running the site locally
 
@@ -145,6 +146,10 @@ The site is served at `http://127.0.0.1:8000/agent365-labs/`. Pushing to `main` 
 The theme and the `cc-card` and `cc-next` widgets are adapted from the [Copilot Developer Camp](https://github.com/microsoft/copilot-camp), used under the MIT License.
 
 Shared reading, link, focus, and navigation styles live in `docs/stylesheets/extra.css`; lab card layout lives in `docs/stylesheets/labStyles.css`. Cards follow the site's configured light theme rather than the operating system's color preference. Both widgets use native links for keyboard navigation and opening labs in a new tab.
+
+Lab screenshots live in `docs/images/a365-01` (Copilot Studio) and `docs/images/a365-02a` (.NET). They are browser captures from a demo tenant and local agent, cropped to the relevant controls with account, tenant, and network identifiers and tool-output content redacted where applicable. When refreshing them, preserve the actual portal state, redact sensitive details before adding images to the repository, and update captions when the UI or example time range changes. Distinguish fully configured demos from starter states and historical portal events from newly generated conversations.
+
+Lab videos are self-hosted in `docs/videos`, with poster images in `docs/images/a365-01`. A365-01 embeds the Defender setup video beside administrator prework, the Copilot Studio walkthrough before Exercise 1 (covering Exercises 1-3), and the Activity and Defender walkthrough before Exercise 4 (covering Exercises 4-5). Players use native controls, do not autoplay or preload the MP4s, and include download links. Preserve the sanitized demo screenshots and publication caveats when refreshing videos; the written steps remain the source of exact configuration text.
 
 ## Where the SDK sample agents come from
 

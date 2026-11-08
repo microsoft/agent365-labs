@@ -29,6 +29,9 @@ Use the prerequisites below for this lab. Next comes [Salesforce Connected Platf
 
 You need a browser. You do not need the GitHub Copilot CLI, Agent 365 CLI, PAC, a local agent project, or an Azure OpenAI resource.
 
+!!! note "About the screenshots"
+    These screenshots were captured from a configured demo tenant on November 7, 2026. Gray blocks conceal user, tenant, and network identifiers; administrator lists are excluded. Use your own agent name, identifiers, and test time rather than copying the demo values. Select an image to open it at full size. Portal layouts and feature availability can differ between tenants.
+
 ### Administrator prework and tenant requirements
 
 | Requirement | What must already be true |
@@ -65,6 +68,17 @@ There are two separate integrations. Complete the first before the lab; the seco
 
 Ask your security administrator to complete this [Defender onboarding](https://learn.microsoft.com/defender-xdr/security-for-ai/get-started-defender-security-for-ai#connect-data-sources) in the **same tenant** as the lab environment:
 
+**Video: Defender Security for AI setup (1:12)**
+
+Watch the administrator setup walkthrough, then follow the written steps below in your own tenant. This covers Purview auditing and the Microsoft 365 connector, not the optional Copilot Studio real-time protection integration.
+
+<video class="lab-video" controls playsinline preload="none" width="1920" height="1080" poster="../images/a365-01/defender-setup-video-poster.jpg" aria-label="Defender Security for AI administrator setup walkthrough">
+  <source src="../videos/defender-security-for-ai-setup.mp4" type="video/mp4">
+  Your browser does not support inline video. Use the download link below.
+</video>
+
+[Download the Defender setup video](videos/defender-security-for-ai-setup.mp4).
+
 1. In <https://purview.microsoft.com>, open **Audit**. If it is not visible, click on **Solutions** > **Audit**. If a **Start recording user and admin activity** banner appears,  select it and follow [the audit setup instructions](https://learn.microsoft.com/purview/audit-log-enable-disable).
 2. In <https://security.microsoft.com>, open the navigation bar, choose **Setup & Configuration** > **Settings** > **Security for AI** > **Get started**.
 3. Confirm **Agent 365** is marked **Done**. This happens automatically after Agent 365 onboarding.
@@ -77,8 +91,27 @@ Ask your security administrator to complete this [Defender onboarding](https://l
 10. Click on the value in the **Status** column and, under **Last health check**, click **Test now**. This will force the sync of the connector.
 11. It will take a while now for the integration to be completed, but in the meantime you can continue the rest of the lab.
 
+[![Defender Security for AI Get started page showing Agent 365 Done and the Microsoft 365 connector Connected.](images/a365-01/defender-get-started.png)](images/a365-01/defender-get-started.png)
+
+*The configured demo tenant shows **Agent 365: Done** and **Microsoft 365 connector: Connected**. A new connection can show **Pending connection** while it synchronizes. The separate **Copilot Studio** row concerns real-time protection, which is not required for this lab, even if the portal labels that row Required.*
+
+[![Microsoft 365 App Connector details showing Connected status and the Test now button under Last health check.](images/a365-01/defender-connector-health.png)](images/a365-01/defender-connector-health.png)
+
+*For steps 9 and 10, open the connector's status to find **Last health check** and **Test now**. The connected-by account is redacted. This screenshot shows an existing healthy connection; it is not the initial connection wizard.*
+
 
 ## Exercise 1: Create the agent in the new experience
+
+**Video: Create and test the Copilot Studio agent (7:34)**
+
+This narrated walkthrough covers **Exercises 1-3**: instructions, the Microsoft Learn MCP server, the native `learn-research` skill, publishing, and a successful `microsoft_docs_search` call in Preview. Pause as you work and use the written lab for exact copy-and-paste text. The video shows an existing configured demo; its publication dialog is not a new publish. Activity and Defender verification continue in Exercises 4 and 5.
+
+<video class="lab-video" controls playsinline preload="none" width="1920" height="1080" poster="../images/a365-01/copilot-studio-video-poster.jpg" aria-label="Narrated Copilot Studio agent creation and Preview walkthrough">
+  <source src="../videos/copilot-studio-lab-walkthrough.mp4" type="video/mp4">
+  Your browser does not support inline video. Use the download link below.
+</video>
+
+[Download the Copilot Studio walkthrough](videos/copilot-studio-lab-walkthrough.mp4). English captions are included in the video.
 
 ### Step 1: Open the correct authoring surface
 
@@ -87,6 +120,10 @@ Ask your security administrator to complete this [Defender onboarding](https://l
 3. On **Home**, click on **Agent** with the **GitHub Copilot** tag.
 
 Do not select **Other ways to build**, which leads to the standard harness. The new agent should have **Build** and **Preview** tabs, with **Tools** and **Skills** in Build.
+
+[![Copilot Studio Home showing the Agent card with a GitHub Copilot tag and the separate Other ways to build option.](images/a365-01/copilot-studio-home.png)](images/a365-01/copilot-studio-home.png)
+
+*Choose the **Agent** card with the **GitHub Copilot** tag. **Other ways to build** is a different authoring path.*
 
 ### Step 2: Name the agent
 
@@ -207,7 +244,18 @@ Confirm that the Preview activity trace shows a successful `microsoft_docs_searc
 
 ## Exercise 4: Check Activity in the Microsoft 365 admin center
 
-### Step 3: Open the agent and its Activity view
+**Video: Agent Activity and Defender traces (6:06)**
+
+This narrated walkthrough covers **Exercises 4-5**: agent Details and Activity in the Microsoft 365 admin center, then invocation and Microsoft Learn tool events in Defender. Pause as you work and use the written query below for your own agent. The admin-center capture shows November 7 activity; the Defender examples show older November 4 events, not the same conversation. Correlate your own agent, caller, test time, and conversation.
+
+<video class="lab-video" controls playsinline preload="none" width="1920" height="1080" poster="../images/a365-01/copilot-studio-activity-defender-video-poster.jpg" aria-label="Narrated agent Details, Activity, and Defender trace walkthrough">
+  <source src="../videos/copilot-studio-activity-defender-walkthrough.mp4" type="video/mp4">
+  Your browser does not support inline video. Use the download link below.
+</video>
+
+[Download the Activity and Defender walkthrough](videos/copilot-studio-activity-defender-walkthrough.mp4). English captions are included in the video.
+
+### Step 1: Open the agent and its Activity view
 
 1. Go to <https://admin.cloud.microsoft> or <https://admin.microsoft.com>.
 2. Open **Agents** > **All agents**.
@@ -215,6 +263,10 @@ Confirm that the Preview activity trace shows a successful `microsoft_docs_searc
 4. Open the agent details.
 5. Open **Activity** if the tab is present.
 6. You should see a session executed by your user in the tenant.
+
+[![Microsoft Support Agent Activity tab showing one active user, four sessions, zero exceptions, and the last activity date.](images/a365-01/admin-center-activity.png)](images/a365-01/admin-center-activity.png)
+
+*The demo agent's **Activity** tab shows usage totals, charts, and an active-user entry. Compare **Last activity date (UTC)** and the user row with your own Preview test. The demo screenshot includes several historical sessions, so your counts will differ.*
 
 ### Step 2: Interpret the surface correctly
 
@@ -270,6 +322,10 @@ You may see several values in the **ActionType** column. The key events to look 
 
 **Please note**: traces might take a bit to show up, especially if Agent 365 was recently enabled, so don't worry if you don't see them immediately.
 
+[![Defender Advanced hunting results for Microsoft Support Agent with InvokeAgent and ExecuteToolBySDK events from Copilot Studio Test Pane.](images/a365-01/defender-hunting-results.png)](images/a365-01/defender-hunting-results.png)
+
+*Look for both **InvokeAgent** and **ExecuteToolBySDK**, with your agent name and **Copilot Studio Test Pane** channel. This screenshot uses `ago(12d)` to include the demo's November 4 runs, and hides identifier columns for readability. Keep `ago(1d)` for a fresh test unless you need a wider window.*
+
 **InvokeAgent**  
 These traces show that the agent was invoked. If you inspect the record and expand **RawEventData**, you will see fields that help identify the trace, including:
 
@@ -280,8 +336,16 @@ These traces show that the agent was invoked. If you inspect the record and expa
 - `TargetAgentId`, which is the GUID that identifies the agent identity assigned to the agent
 - `TargetAgentBlueprintID`, which is the GUID that identifies the blueprint used to generate the identity
 
+[![Expanded InvokeAgent RawEventData showing the Operation, UserId, Agent365 Workload, and Copilot Studio Test Pane ChannelName fields, with identifiers redacted.](images/a365-01/defender-invoke-agent.png)](images/a365-01/defender-invoke-agent.png)
+
+*Expand the event row, expand **RawEventData**, and scroll within the details. **Operation: InvokeAgent**, **Workload: Agent365**, and **ChannelName: Copilot Studio Test Pane** identify the invocation in this example. Inspect **UserId** in your own tenant; its value is redacted here.*
+
 **ExecuteToolBySDK**  
 These traces show that the agent invoked a tool. If you inspect the record and expand **RawEventData**, you will see the same identifying fields as for **InvokeAgent**, along with values such as `ToolName`, `ToolId`, and `ToolType`, which identify the tool that was called. In this lab that should be the Microsoft Learn MCP server.
+
+[![Expanded ExecuteToolBySDK RawEventData showing microsoft_docs_search.microsoft_docs_search, its MCP tool type, and the microsoftlearndocsmcpserver server name.](images/a365-01/defender-execute-tool.png)](images/a365-01/defender-execute-tool.png)
+
+*Scroll to the tool fields in **RawEventData**. This real lookup shows **ToolName: microsoft_docs_search.microsoft_docs_search**, **ToolType: MCP:InvokeTool - Power Platform Connector**, and **ToolServerName: microsoftlearndocsmcpserver**. The tenant-specific **ToolId** is redacted.*
 
 ---
 

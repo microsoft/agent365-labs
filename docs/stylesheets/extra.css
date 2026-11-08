@@ -146,6 +146,16 @@ button.md-header__button:hover {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 16 / 9;
+  margin: 1rem 0;
+  border: 1px solid var(--lab-border-color);
+  border-radius: 10px;
+  background: #0d142b;
+}
+
+.md-typeset .lab-video:focus-visible {
+  outline: 2px solid var(--lab-focus-color);
+  outline-offset: 3px;
 }
 
 .md-typeset a {
