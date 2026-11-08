@@ -44,6 +44,9 @@ code .
 
 It is a research assistant that answers questions about Microsoft products by searching the [Microsoft Learn MCP server](https://learn.microsoft.com/api/mcp) and citing what it found. It already contains the Microsoft Entra sign-in that the OBO path depends on, but that sign-in stays dormant until you fill in the settings in Exercise 2.
 
+!!! note "About the screenshots"
+    These browser captures were taken on November 7, 2026, from a fully configured .NET demo agent and its demo tenant. The chat already has sign-in, observability, and Work IQ enabled; it is not the anonymous starter from Exercise 1. Portal screenshots include earlier November 4 and 6 runs, while Activity also reports November 7 usage. Gray blocks conceal accounts, identifiers, and tool-output content. Use your own agent identifiers and test time, and select an image to open it at full size.
+
 ## How the exercises work
 
 From Exercise 3 onwards, most steps follow the same structure:
@@ -481,6 +484,10 @@ dotnet run
 If everything goes well, this time, when you open the browser on the URL `http://localhost:5140/`, you should be asked first to sign in using an account from your tenant. Once the web application is loaded, you will see the signed in user in the left panel and you will be able to chat normally.
 However, this time, the messages you send will be tied to your user.
 
+[![Signed-in Microsoft Learn Agent answering the Conditional Access question with a Microsoft Learn source, with the account redacted.](images/a365-02a/learn-agent-chat.png)](images/a365-02a/learn-agent-chat.png)
+
+*Check the **Signed in as** label and an answer that includes Microsoft Learn sources. This is a real response to the Exercise 1 question. The configured demo's Work IQ subtitle refers to the tools you add in Exercise 5; those tools are not required for this documentation lookup.*
+
 > ✅ **Checkpoint.** This is a good place to stop if you need to. The agent is registered and governed, it shows up in your tenant, and users sign in to it with a token addressed to the blueprint. It does not emit any telemetry yet.
 
 ---
@@ -782,9 +789,29 @@ CloudAppEvents
 | order by Timestamp desc
 ```
 
+[![Defender Advanced hunting showing InvokeAgent and ExecuteToolBySDK events for LearnMcpAgent Identity, including the web channel.](images/a365-02a/defender-hunting-results.png)](images/a365-02a/defender-hunting-results.png)
+
+*Look for **InvokeAgent** and **ExecuteToolBySDK** events for your agent. The saved demo query uses `ago(12d)` and extra projected columns to inspect existing runs; identifier columns are hidden here. These November 6 events include later handoff and Mail demo calls, not calls from the November 7 documentation question shown above. Use your own exported agent name and an appropriate time window.*
+
+[![Expanded .NET InvokeAgent RawEventData showing Operation InvokeAgent, Workload Agent365, caller fields, and ChannelName web.](images/a365-02a/defender-invoke-agent.png)](images/a365-02a/defender-invoke-agent.png)
+
+*Expand an event row, expand **RawEventData**, and scroll to the invocation fields. This November 6 example shows **Operation: InvokeAgent**, **Workload: Agent365**, and **ChannelName: web**. Inspect the caller and conversation values in your own tenant; they are redacted here.*
+
+[![Expanded .NET tool event showing the CustomBuiltAgentsUsingSDK platform, microsoft_docs_search tool name, and function tool type.](images/a365-02a/defender-learn-tool.png)](images/a365-02a/defender-learn-tool.png)
+
+*This November 4 Microsoft Learn lookup shows **ToolName: microsoft_docs_search**, **ToolType: function**, and **CustomBuiltAgentsUsingSDK** as its platform. SDK tool names can differ from the prefixed names in the Copilot Studio lab. Check the tool event's agent identity against the identity configured in your app.*
+
 ### Step 3: Check the Microsoft 365 admin center
 
 Go to [admin.cloud.microsoft](https://admin.cloud.microsoft), find your agent in the inventory, and open its activity.
+
+[![Microsoft 365 admin center Details tab for LearnMcpAgent Agent, showing Available status and the redacted Entra agent ID.](images/a365-02a/admin-center-agent-details.png)](images/a365-02a/admin-center-agent-details.png)
+
+*The demo's inventory entry is named **LearnMcpAgent Agent**, while its exported events use **LearnMcpAgent Identity**. They refer to the same Entra agent identity. Compare **Entra agent ID** with the invocation's **TargetAgentId** or the tool event's **AgentId**, rather than relying on display names alone.*
+
+[![LearnMcpAgent Agent Activity tab showing usage totals, activity charts, and a redacted active-user entry.](images/a365-02a/admin-center-activity.png)](images/a365-02a/admin-center-activity.png)
+
+*Use **Usage**, **Last activity date (UTC)**, and the **Active users** table to check activity and user attribution. The totals include historical sessions, and the user row and overall activity date can differ. Your counts and dates do not need to match the demo.*
 
 The admin center ingests `invoke_agent` rows only and reads the caller identity from that span. The combination of what each portal shows tells you where a problem is:
 
@@ -1039,6 +1066,10 @@ AlertInfo
 ```
 
 Replace `your-agent-id` with the `AgentId` from `appsettings.json`. If the join returns nothing, run `AlertInfo | where Timestamp > ago(2h)` on its own and look for an alert from the time of your turn.
+
+[![Existing LearnMcpAgent Identity XPIA alert showing the agent entity, alert explanation, redacted activity details, web channel, and read_shared_handoff_note tool.](images/a365-02a/defender-xpia-alert.png)](images/a365-02a/defender-xpia-alert.png)
+
+*This existing November 6 alert identifies the demo agent, **ChannelName: web**, and **ToolName: read_shared_handoff_note**. **What happened** says the tool output was classified as a prompt-injection attempt; the alert does not prove that the agent followed the instruction or sent an email. Inspect subsequent events to establish what actually happened. The caller, identifiers, and tool-output content are redacted.*
 
 > ✅ **Checkpoint.** Defender has turned the agent's risky behaviour into an alert, attributed to your agent and to the user who drove it.
 
