@@ -1,8 +1,8 @@
 # SDK requirements
 
-**Main flow:** [**1. Copilot Studio**](./01-copilot-studio.md) **→ 2. SDK requirements →** [**3. .NET**](./02a-web-obo-dotnet.md)
+**Main flow:** [**1. Copilot Studio**](./01-copilot-studio.md) **→** [**2. Salesforce Connected Platforms**](./01b-salesforce-connected-platforms.md) **→ 3. SDK requirements →** [**4. .NET**](./02a-web-obo-dotnet.md)
 
-Complete this setup after Copilot Studio and before the .NET lab. These requirements also apply to the optional [Python](./02b-web-obo-python.md) and [JavaScript / Node.js](./02c-web-obo-nodejs.md) labs; install their language-specific tools only if you plan to take them.
+Complete this setup after the Salesforce Connected Platforms lab and before the .NET lab. These requirements also apply to the optional [Python](./02b-web-obo-python.md) and [JavaScript / Node.js](./02c-web-obo-nodejs.md) labs; install their language-specific tools only if you plan to take them.
 
 The first lab has its own [Copilot Studio prerequisites](./01-copilot-studio.md#prerequisites). You do not need the SDK tools to complete that lab.
 
@@ -169,7 +169,7 @@ Review the skills and plugin contents before installing, because they can guide 
 
 Watch this **2-minute, 12-second walkthrough with English narration** for the GitHub Copilot CLI, VS Code, and GitHub Copilot app routes. Choose the chapter for your client, then follow the written steps below.
 
-<video class="lab-video" controls preload="metadata" playsinline width="1920" height="1080" aria-label="Agent 365 skills installation walkthrough" aria-describedby="skills-video-note">
+<video class="lab-video" controls preload="metadata" playsinline width="1920" height="1080" aria-label="Agent 365 skills installation walkthrough">
   <source src="../assets/videos/agent365-skills-tutorial.mp4" type="video/mp4">
   Your browser does not support embedded video. Download the walkthrough using the link below.
 </video>

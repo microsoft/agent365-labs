@@ -54,8 +54,9 @@ nav:
   - Home: 'index.md'
   - Main lab flow:
     - '1. Copilot Studio - A365-01': '01-copilot-studio.md'
-    - '2. SDK requirements': '00-prerequisites.md'
-    - '3. .NET on Blazor Server - A365-02A': '02a-web-obo-dotnet.md'
+    - '2. Salesforce Connected Platforms - A365-01B': '01b-salesforce-connected-platforms.md'
+    - '3. SDK requirements': '00-prerequisites.md'
+    - '4. .NET on Blazor Server - A365-02A': '02a-web-obo-dotnet.md'
   - Optional labs:
     - 'Optional: Python on FastAPI - A365-02B': '02b-web-obo-python.md'
     - 'Optional: JavaScript / Node.js on Express - A365-02C': '02c-web-obo-nodejs.md'

@@ -1,6 +1,6 @@
 # Lab A365-02A - Web App Agent with User OBO (.NET)
 
-**Main flow: [1. Copilot Studio](./01-copilot-studio.md) → [2. SDK requirements](./00-prerequisites.md) → 3. .NET**
+**Main flow: [1. Copilot Studio](./01-copilot-studio.md) → [2. Salesforce Connected Platforms](./01b-salesforce-connected-platforms.md) → [3. SDK requirements](./00-prerequisites.md) → 4. .NET**
 
 > **Stack**: .NET 10, Microsoft Agent Framework, Blazor Server **Duration**: around 3 hours **Level**: Intermediate
 
@@ -32,9 +32,9 @@ After completing this lab, you will be able to:
 
 ## Prerequisites
 
-After the [Copilot Studio lab](./01-copilot-studio.md), work through the [SDK requirements](./00-prerequisites.md) before you start. In short, you need the .NET 10 SDK, the Agent 365 CLI, an Azure OpenAI resource, a tenant with Agent 365 enabled and at least one Agent 365 license in it and a user with administrator account. This lab is based on the usage of coding agents, so you'll need Visual Studio Code with GitHub Copilot or the GitHub Copilot app, plus an account with a GitHub Copilot subscription and AI credits to spend.
+After the [Salesforce Connected Platforms lab](./01b-salesforce-connected-platforms.md), work through the [SDK requirements](./00-prerequisites.md) before you start. In short, you need the .NET 10 SDK, the Agent 365 CLI, an Azure OpenAI resource, a tenant with Agent 365 enabled and at least one Agent 365 license in it and a user with administrator account. This lab is based on the usage of coding agents, so you'll need Visual Studio Code with GitHub Copilot or the GitHub Copilot app, plus an account with a GitHub Copilot subscription and AI credits to spend.
 
-For a visual guide to the coding-assistant setup, watch the [Agent 365 Skills video walkthrough](./00-prerequisites.md#video-walkthrough-draft). It covers the CLI, VS Code, and Copilot app options; you only need one route.
+For a visual guide to the coding-assistant setup, watch the [Agent 365 Skills video walkthrough](./00-prerequisites.md#video-walkthrough). It covers the CLI, VS Code, and Copilot app options; you only need one route.
 
 The starting point for this lab is the local .NET sample agent. If you already cloned this repository during the SDK requirements, open `samples/dotnet` in that checkout; otherwise:
 

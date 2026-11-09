@@ -2,19 +2,20 @@
 
 📖 **Read the labs at [microsoft.github.io/agent365-labs](https://microsoft.github.io/agent365-labs)**
 
-Hands-on labs for [**Microsoft Agent 365**](https://learn.microsoft.com/microsoft-agent-365/). Start by building a Copilot Studio agent with built-in observability, prepare the SDK requirements, then register and instrument a custom .NET web agent.
+Hands-on labs for [**Microsoft Agent 365**](https://learn.microsoft.com/microsoft-agent-365/). Build a Copilot Studio agent with built-in observability, discover a Salesforce agent through Connected Platforms, prepare the SDK requirements, then register and instrument a custom .NET web agent.
 
-The labs use a Microsoft documentation research assistant. You follow its tool calls and inspect the resulting activity in Microsoft Defender and the Microsoft 365 admin center.
+The Copilot Studio and SDK labs use a Microsoft documentation research assistant. You follow its tool calls and inspect the resulting activity in Microsoft Defender and the Microsoft 365 admin center. The Salesforce lab uses a simple training agent to demonstrate third-party inventory discovery.
 
-Each lab is designed to be completed in a single sitting. Copilot Studio stays in browser surfaces; the SDK labs use a terminal and a browser.
+Each lab is designed for a single sitting of hands-on work, with additional time for provisioning and indexing. Copilot Studio and Salesforce use browser surfaces; Salesforce includes an optional CLI workaround. The SDK labs use a terminal and a browser.
 
 ## Main lab flow
 
 Complete these steps in order. Python and JavaScript are optional extensions, not required steps or replacements for .NET in this flow.
 
 1. [Copilot Studio - Lab A365-01](./docs/01-copilot-studio.md)
-2. [SDK requirements](./docs/00-prerequisites.md)
-3. [.NET - Lab A365-02A](./docs/02a-web-obo-dotnet.md)
+2. [Salesforce Connected Platforms - Lab A365-01B](./docs/01b-salesforce-connected-platforms.md)
+3. [SDK requirements](./docs/00-prerequisites.md)
+4. [.NET - Lab A365-02A](./docs/02a-web-obo-dotnet.md)
 
 ### 1. Copilot Studio agent with the GitHub Copilot runtime harness
 
@@ -26,11 +27,19 @@ This lab has its own tenant and Defender prerequisites. Check Activity availabil
 | --- | --- | --- | --- |
 | [A365-01](./docs/01-copilot-studio.md) | Copilot Studio new experience with the GitHub Copilot runtime harness | ~60-90 minutes, plus admin prework and indexing | Beginner to intermediate |
 
-### 2. SDK requirements
+### 2. Salesforce Agentforce with Connected Platforms
 
-After A365-01, complete the [SDK requirements](./docs/00-prerequisites.md): install the tools and Agent 365 Skills, check tenant licences and permissions, clone the .NET sample, and prepare Azure OpenAI. Then continue to the .NET lab.
+Create a free Salesforce developer org, enable Agentforce and Data 360, configure an external client app, and connect it to Agent 365. Create and activate a Salesforce agent, then manually synchronize the connection to find it in the Microsoft 365 admin center. The lab includes the supported CLI workaround for runtime-user provisioning and optional session Activity verification.
 
-### 3. .NET web app agent with user on-behalf-of
+| Lab | Authoring and administration surfaces | Duration | Level |
+| --- | --- | --- | --- |
+| [A365-01B](./docs/01b-salesforce-connected-platforms.md) | Salesforce Agentforce and Microsoft 365 admin center | ~60-90 minutes, plus provisioning and synchronization | Beginner to intermediate |
+
+### 3. SDK requirements
+
+After A365-01B, complete the [SDK requirements](./docs/00-prerequisites.md): install the tools and Agent 365 Skills, check tenant licences and permissions, clone the .NET sample, and prepare Azure OpenAI. Then continue to the .NET lab.
+
+### 4. .NET web app agent with user on-behalf-of
 
 In A365-02A, a user opens a web page, signs in, and drives the agent. Everything the agent does is attributed back to that person. This is the final lab in the main flow.
 
@@ -61,6 +70,8 @@ The first lab, Copilot Studio, moves through five stages:
 | 4 | Generate an authenticated same-tenant run and check Activity | Evidence for the test period in the Microsoft 365 admin center, or partial-completion notes if that surface stays incomplete |
 | 5 | Hunt the traces in Defender | Matching invocation and Microsoft Learn tool events for the same conversation and time window |
 
+The Salesforce lab then covers developer-org signup, capability and OAuth setup, connection creation, agent creation, and manual synchronization. Its completion evidence is a Salesforce-sourced agent in the Microsoft inventory; session Activity is an optional extension.
+
 After the SDK requirements, the .NET lab follows these seven exercises. The optional Python and JavaScript labs follow the same structure for exercises 1 to 6, with the Python Work IQ limitation noted above.
 
 | # | Exercise | What you have at the end |
@@ -80,11 +91,13 @@ Check the prerequisites at the relevant point in the flow:
 | Step | Start here |
 | --- | --- |
 | **1. Copilot Studio** | [Lab A365-01 prerequisites](./docs/01-copilot-studio.md#prerequisites) |
-| **2. SDK requirements, before .NET** | [SDK requirements](./docs/00-prerequisites.md) |
+| **2. Salesforce Connected Platforms** | [Lab A365-01B prerequisites](./docs/01b-salesforce-connected-platforms.md#prerequisites) |
+| **3. SDK requirements, before .NET** | [SDK requirements](./docs/00-prerequisites.md) |
 
 | | |
 | --- | --- |
 | **Copilot Studio** | Copilot Studio new experience, tenant licensing and credits, Defender connector readiness, and browser access to the right environment |
+| **Salesforce Connected Platforms** | A free Agentforce Developer Edition org, Salesforce System Administrator access, and a Microsoft administrator who can create platform connections |
 | **SDK labs** | CLI, SDK, Azure OpenAI, local code, sample agent clone, and admin consent handoffs |
 
 The Agent 365 CLI requires .NET 8 or later; the local .NET sample targets .NET 10 and requires the .NET 10 SDK. **The Copilot Studio lab does not use the CLI, PAC, local code, or Azure OpenAI.** Python, uv, and Node.js are needed only for their respective optional labs.
@@ -108,7 +121,8 @@ The SDK labs do most of the Agent 365 work by asking an AI coding assistant to d
 | --- | --- |
 | [`docs/index.md`](./docs/index.md) | Landing page of the documentation site |
 | [`docs/01-copilot-studio.md`](./docs/01-copilot-studio.md) | Lab A365-01, Copilot Studio with the GitHub Copilot harness |
-| [`docs/00-prerequisites.md`](./docs/00-prerequisites.md) | SDK requirements, between Copilot Studio and .NET |
+| [`docs/01b-salesforce-connected-platforms.md`](./docs/01b-salesforce-connected-platforms.md) | Lab A365-01B, Salesforce Agentforce inventory discovery with Connected Platforms |
+| [`docs/00-prerequisites.md`](./docs/00-prerequisites.md) | SDK requirements, after Salesforce and before .NET |
 | [`docs/02a-web-obo-dotnet.md`](./docs/02a-web-obo-dotnet.md) | Lab A365-02A, .NET, the final lab in the main flow |
 | [`docs/02b-web-obo-python.md`](./docs/02b-web-obo-python.md) | Optional lab A365-02B, Python |
 | [`docs/02c-web-obo-nodejs.md`](./docs/02c-web-obo-nodejs.md) | Optional lab A365-02C, JavaScript / Node.js (TypeScript) |
@@ -147,7 +161,7 @@ All three are research assistants that answer questions about Microsoft products
 
 You can bring your own agent instead. The labs assume it runs as a web app with one HTTP request per turn, and that there is a single place in the code where a turn begins and ends, which is where the instrumentation goes.
 
-Start with a new Copilot Studio agent in the product. After completing the SDK requirements, take the same documentation-assistant idea through the .NET web-app lab. Python and JavaScript are optional follow-on labs.
+Start with a new Copilot Studio agent in the product, then discover a Salesforce agent through Connected Platforms. After completing the SDK requirements, take the documentation-assistant idea through the .NET web-app lab. Python and JavaScript are optional follow-on labs.
 
 ## Related
 

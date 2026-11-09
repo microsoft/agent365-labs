@@ -1,6 +1,6 @@
 # Lab A365-01 - Copilot Studio agent with the GitHub Copilot harness
 
-**Main flow: 1. Copilot Studio →** [**2. SDK requirements**](./00-prerequisites.md) **→** [**3. .NET**](./02a-web-obo-dotnet.md)
+**Main flow: 1. Copilot Studio → [2. Salesforce Connected Platforms](./01b-salesforce-connected-platforms.md) → [3. SDK requirements](./00-prerequisites.md) → [4. .NET](./02a-web-obo-dotnet.md)**
 
 > **Path**: Browser-first, Copilot Studio new experience, GitHub Copilot runtime harness  
 > **Duration**: around 60-90 minutes, plus administrator prework and telemetry indexing  
@@ -25,7 +25,7 @@ After completing this lab, you will be able to:
 
 ## Prerequisites
 
-Use the prerequisites below for this lab. You will complete the [SDK requirements](./00-prerequisites.md) after this lab, before continuing to .NET.
+Use the prerequisites below for this lab. Next comes [Salesforce Connected Platforms](./01b-salesforce-connected-platforms.md), followed by the [SDK requirements](./00-prerequisites.md) before .NET.
 
 You need a browser. You do not need the GitHub Copilot CLI, Agent 365 CLI, PAC, a local agent project, or an Azure OpenAI resource.
 
@@ -293,6 +293,6 @@ If either portal check is blocked, record the result as partial completion with 
 
 For extra test turns after this lab, see the [sample prompts](99-sample-prompts.md).
 
-Next, complete the [SDK requirements](./00-prerequisites.md), then continue to the [.NET lab](./02a-web-obo-dotnet.md).
+Next, complete [Salesforce Connected Platforms](./01b-salesforce-connected-platforms.md) to discover a third-party agent, then prepare the [SDK requirements](./00-prerequisites.md) for the [.NET lab](./02a-web-obo-dotnet.md).
 
-<cc-next label="Continue to SDK requirements" url="../00-prerequisites/"></cc-next>
+<cc-next label="Continue to Salesforce Connected Platforms - A365-01B" url="../01b-salesforce-connected-platforms/"></cc-next>
