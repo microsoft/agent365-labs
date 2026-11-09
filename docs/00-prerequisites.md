@@ -167,7 +167,7 @@ Review the skills and plugin contents before installing, because they can guide 
 
 ### Video walkthrough (draft)
 
-Watch this **2-minute, 34-second walkthrough with English narration** for the GitHub Copilot CLI, VS Code, and GitHub Copilot app routes. Choose the chapter for your client, then follow the written steps below.
+Watch this **2-minute, 12-second walkthrough with English narration** for the GitHub Copilot CLI, VS Code, and GitHub Copilot app routes. Choose the chapter for your client, then follow the written steps below.
 
 <video class="lab-video" controls preload="metadata" playsinline width="1920" height="1080" aria-label="Agent 365 skills installation walkthrough" aria-describedby="skills-video-note">
   <source src="../assets/videos/agent365-skills-tutorial.mp4" type="video/mp4">
@@ -176,7 +176,7 @@ Watch this **2-minute, 34-second walkthrough with English narration** for the Gi
 
 [Watch or download the walkthrough (MP4)](./assets/videos/agent365-skills-tutorial.mp4)
 
-**Chapters:** 00:12 GitHub Copilot CLI; 00:54 VS Code; 01:40 GitHub Copilot app; 02:22 verification checklist.
+**Chapters:** 00:12 GitHub Copilot CLI; 00:54 VS Code; 01:40 GitHub Copilot app.
 
 <p id="skills-video-note"><strong>Draft recording:</strong> the CLI attempt reports directory-read warnings and does not confirm a successful project-scope installation. The VS Code and Copilot app plugin screens show already-installed state, not a new Install action. The app's Skills verification is not recorded. Use the written instructions and verification steps below as the source of truth.</p>
 
