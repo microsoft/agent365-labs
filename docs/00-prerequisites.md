@@ -1,6 +1,6 @@
 # SDK requirements
 
-**Main flow: [1. Copilot Studio](./01-copilot-studio.md) → 2. SDK requirements → [3. .NET](./02a-web-obo-dotnet.md)**
+**Main flow:** [**1. Copilot Studio**](./01-copilot-studio.md) **→ 2. SDK requirements →** [**3. .NET**](./02a-web-obo-dotnet.md)
 
 Complete this setup after Copilot Studio and before the .NET lab. These requirements also apply to the optional [Python](./02b-web-obo-python.md) and [JavaScript / Node.js](./02c-web-obo-nodejs.md) labs; install their language-specific tools only if you plan to take them.
 
@@ -165,7 +165,7 @@ Review the skills and plugin contents before installing, because they can guide 
 
 > Lab A365-01 does not use these coding-assistant skills. It uses a native skill created inside the Copilot Studio browser authoring experience.
 
-### Video walkthrough (draft)
+### Video walkthrough
 
 Watch this **2-minute, 12-second walkthrough with English narration** for the GitHub Copilot CLI, VS Code, and GitHub Copilot app routes. Choose the chapter for your client, then follow the written steps below.
 
@@ -177,8 +177,6 @@ Watch this **2-minute, 12-second walkthrough with English narration** for the Gi
 [Watch or download the walkthrough (MP4)](./assets/videos/agent365-skills-tutorial.mp4)
 
 **Chapters:** 00:12 GitHub Copilot CLI; 00:54 VS Code; 01:40 GitHub Copilot app.
-
-<p id="skills-video-note"><strong>Draft recording:</strong> the CLI attempt reports directory-read warnings and does not confirm a successful project-scope installation. The VS Code and Copilot app plugin screens show already-installed state, not a new Install action. The app's Skills verification is not recorded. Use the written instructions and verification steps below as the source of truth.</p>
 
 ### Option 1: Install the GitHub CLI and add the skills manually
 
