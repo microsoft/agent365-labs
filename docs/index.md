@@ -109,7 +109,7 @@ The first lab, Copilot Studio, moves through five stages:
 
 The Salesforce lab then covers developer-org signup, capability and OAuth setup, connection creation, agent creation, and manual synchronization. Its completion evidence is a Salesforce-sourced agent in the Microsoft inventory; session Activity is an optional extension.
 
-After the SDK requirements, the .NET lab follows these seven exercises. The optional Python and JavaScript labs follow the same structure for exercises 1 to 6, with the Python Work IQ limitation noted above.
+After the SDK requirements, the .NET lab follows these eight exercises. The optional Python and JavaScript labs follow the same structure for exercises 1 to 6, with the Python Work IQ limitation noted above. Allow an additional 30-45 minutes for the Purview exercise, plus tenant setup and policy propagation.
 
 | # | Exercise | What you have at the end |
 | --- | --- | --- |
@@ -120,6 +120,7 @@ After the SDK requirements, the .NET lab follows these seven exercises. The opti
 | 5 | Give the agent access to Microsoft 365 data | Mail, Calendar and more through the Work IQ MCP servers, as the signed-in user |
 | 6 | Verify it end to end | Activity confirmed in Microsoft Defender and the Microsoft 365 admin center |
 | 7 | See Defender react to a risky agent | A Defender alert for a prompt-injection attack, and an email notification when it happens again |
+| 8 | [Block credit-card prompts with Microsoft Purview](02a-web-obo-dotnet.md#exercise-8-block-credit-card-prompts-with-microsoft-purview) | A portal-created DLP policy, a skill-integrated input gate, and a verified block before the model runs |
 
 ## Before you start
 
@@ -168,7 +169,7 @@ Start with a new Copilot Studio agent in the product, then discover a Salesforce
 | Resource | What it is for |
 | --- | --- |
 | [Agent 365 runbooks](https://github.com/qmatteoq/agent365-runbook) | Reference guidance for onboarding your own agent, organized by scenario and pattern |
-| [Agent 365 Skills](https://github.com/microsoft/agent365-skills) | The six skills the labs drive from your coding assistant |
+| [Agent 365 Skills](https://github.com/microsoft/agent365-skills) | Skills the labs drive from your coding assistant, including Purview DLP integration |
 | [Agent 365 documentation](https://learn.microsoft.com/microsoft-agent-365/) | The official product documentation |
 
 Use these labs to learn the onboarding path end to end on a known sample. Use the runbooks when you are applying it to an agent of your own.
