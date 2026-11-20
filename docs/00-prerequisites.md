@@ -157,7 +157,7 @@ Confirm the tool list contains `Microsoft.Agents.A365.DevTools.Cli` and that `a3
 
 ## Installing the Agent 365 Skills
 
-Most of the Agent 365 work in the **SDK labs** is done by asking an AI coding assistant to do it, using the [Agent 365 Skills](https://github.com/microsoft/agent365-skills). The `agent365` plugin bundles these skills, including `a365-setup`, `instrument-observability`, and `add-workiq-tools`.
+Most of the Agent 365 work in the **SDK labs** is done by asking an AI coding assistant to do it, using the [Agent 365 Skills](https://github.com/microsoft/agent365-skills). The `agent365` plugin bundles these skills, including `a365-setup`, `instrument-observability`, `add-workiq-tools`, and `purview-dlp-integration`. For .NET Exercise 8, confirm your installed version includes `purview-dlp-integration`; update through your chosen installation route if it does not. That exercise also requires [Purview administrator prework](./02a-web-obo-dotnet.md#exercise-8-block-credit-card-prompts-with-microsoft-purview) for licensing, metered billing, and DSPM onboarding.
 
 **Choose exactly one of the three options below. You do not need to complete all three.** Use Option 1 to install the skills manually through the GitHub CLI, Option 2 to install the plugin in VS Code, or Option 3 to install the plugin in the GitHub Copilot app. Options 2 and 3 do **not** require the GitHub CLI.
 

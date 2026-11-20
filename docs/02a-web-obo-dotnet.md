@@ -2,7 +2,7 @@
 
 **Main flow: [1. Copilot Studio](./01-copilot-studio.md) → [2. Salesforce Connected Platforms](./01b-salesforce-connected-platforms.md) → [3. SDK requirements](./00-prerequisites.md) → 4. .NET**
 
-> **Stack**: .NET 10, Microsoft Agent Framework, Blazor Server **Duration**: around 3 hours **Level**: Intermediate
+> **Stack**: .NET 10, Microsoft Agent Framework, Blazor Server **Duration**: around 3 hours, plus 30-45 minutes for Purview (allow additional time for tenant setup and policy propagation) **Level**: Intermediate
 
 ## Scenario
 
@@ -29,12 +29,15 @@ After completing this lab, you will be able to:
 - Give the agent access to Microsoft 365 data through the Work IQ MCP servers
 - Verify that activity arrives in Defender and in the Microsoft 365 admin center
 - Trigger a risky agent behaviour, investigate the Defender alert, and get notified about it by email
+- Create a Microsoft Purview DLP policy and block credit-card prompts before they reach the model
 
 ## Prerequisites
 
 After the [Salesforce Connected Platforms lab](./01b-salesforce-connected-platforms.md), work through the [SDK requirements](./00-prerequisites.md) before you start. In short, you need the .NET 10 SDK, the Agent 365 CLI, an Azure OpenAI resource, a tenant with Agent 365 enabled and at least one Agent 365 license in it and a user with administrator account. This lab is based on the usage of coding agents, so you'll need Visual Studio Code with GitHub Copilot or the GitHub Copilot app, plus an account with a GitHub Copilot subscription and AI credits to spend.
 
 For a visual guide to the coding-assistant setup, watch the [Agent 365 Skills video walkthrough](./00-prerequisites.md#video-walkthrough). It covers the CLI, VS Code, and Copilot app options; you only need one route.
+
+Exercise 8 also needs a Purview administrator, the tenant's applicable Purview licences, pay-as-you-go billing, and DSPM onboarding for AI apps. Arrange this administrator handoff before the session; see [Exercise 8](#exercise-8-block-credit-card-prompts-with-microsoft-purview).
 
 The starting point for this lab is the local .NET sample agent. If you already cloned this repository during the SDK requirements, open `samples/dotnet` in that checkout; otherwise:
 
@@ -1112,6 +1115,159 @@ When you're done, set `DefenderDemo:Enabled` and `DefenderDemo:VulnerableAgent` 
 
 ---
 
+## Exercise 8: Block credit-card prompts with Microsoft Purview
+
+Defender detected risky behaviour in Exercise 7. Now add an inline **data loss prevention (DLP)** check: Microsoft Purview evaluates the user's prompt, and the app stops the turn when a credit-card policy matches. The blocked prompt must never reach the model or its tools.
+
+This exercise has three parts: create the policy **in the portal**, use the **Agent 365 skill** to integrate the check, then prove that a credit-card prompt is blocked while an ordinary question still works. Observability alone does not enforce DLP.
+
+!!! warning "Use a demo tenant and synthetic data"
+    Use only the test card number below, never a real payment card. The check sends text to Microsoft Purview for evaluation and audit. If content recording from Exercise 7 is still enabled, prompts can also appear in telemetry. Keep the risky Defender demo disabled.
+
+### Step 1: Prepare the tenant and identify the policy's app
+
+Ask your Purview administrator to confirm the following in the **same tenant** as the agent from Exercise 3:
+
+- The required Purview licensing for the users and AI-app scenario is assigned.
+- Purview **pay-as-you-go billing** is linked to an approved Azure subscription. In the [Purview portal](https://purview.microsoft.com), check **Settings > Billing** or follow the AI onboarding prompts. This capability is metered.
+- **DSPM > AI observability** onboarding is complete and the agent is discoverable. Portal labels can vary by rollout; use the current DSPM experience rather than assuming a classic page is equivalent.
+- An administrator can create DLP policies, and an Entra administrator can approve the additional delegated Graph permission in Step 3.
+
+In the agent project, open `a365.generated.config.json` and find `agentBlueprintId`. Record that value and the blueprint display name from `a365.config.json`. For this lab, the **blueprint app (client) ID** is the policy's application location, passed by the guard as `PURVIEW_APP_ID`.
+
+Do not substitute the web sign-in client ID from Exercise 2, the agent identity's object ID, or a demo tenant's identifiers. The app ID used in the policy must exactly match the `applicationLocation` sent by the guard.
+
+### Step 2: Create the credit-card DLP policy in the portal
+
+1. In the [Microsoft Purview portal](https://purview.microsoft.com), confirm the tenant, then open **Solutions > Data Loss Prevention > Policies** and select **Create policy**. Some tenants also expose policy creation through **DSPM > Policies**.
+2. Select **Custom > Custom policy**. Name it `Agent 365 lab - credit cards` and describe its purpose: block credit-card numbers in this lab agent's prompts.
+3. On the locations page, enable **Managed cloud apps** (the `Applications` workload). Turn **all other locations off**, including Exchange, SharePoint, OneDrive, and Teams. Edit the included apps and select only your blueprint app, using the name and app ID from Step 1.
+4. Choose the option to create or customize advanced DLP rules, then create a rule named `Block credit cards in agent prompts`.
+5. Add the condition **Content contains > Sensitive information types > Credit Card Number**. Set the minimum instance count to **1**. Review the confidence setting so one supported test card can match.
+6. Add the action **Restrict access or encrypt the content > Block** for the **prompt/input**. This must enforce an input block (`RestrictAccess` on `UploadText`), not just generate an audit event or alert. Do not configure response blocking for this exercise.
+7. Optionally configure an administrator notification. Then select **Turn it on** / enforcement mode, not simulation, review the app scope and rule, and create the policy.
+8. Reopen the policy and verify its saved configuration against the table below. Allow up to approximately **one hour** for propagation; continue with Step 3 while you wait.
+
+| Setting | Required value |
+| --- | --- |
+| Location | Only **Managed cloud apps** / `Applications`, scoped to the blueprint app ID |
+| Enforcement plane | **Application**, not Copilot experiences |
+| Condition | **Credit Card Number**, at least one instance |
+| Action | **Block** prompt/input (`UploadText`) |
+| Mode | On / enforce, not simulation or audit-only |
+
+!!! warning "Choose the custom-app location"
+    **Microsoft 365 Copilot and Copilot Chat** covers first-party Copilot experiences, not this custom Blazor agent. Do not combine the Applications location with Microsoft 365 storage or messaging locations in the same policy. If the required location or action is unavailable, stop and have the administrator check tenant enablement and permissions; a different location is not an equivalent substitute.
+
+> **Checkpoint.** A dedicated, enabled credit-card policy exists in your tenant, scoped to the same blueprint app ID the guard will send. Policy creation alone does not yet protect the app.
+
+### Step 3: Use the Agent 365 skill to add the DLP gate
+
+**What you type**
+
+Open your instrumented `samples/dotnet` project in your coding assistant. Confirm that the installed Agent 365 Skills include **`purview-dlp-integration`**; update the skills or plugin through your approved installation route if it is missing.
+
+```text
+Use the purview-dlp-integration Agent 365 skill to add Purview DLP
+to this existing .NET Blazor Server agent.
+
+I already created the enabled "Agent 365 lab - credit cards" policy
+in the Purview portal. Use that policy; do not create or change policies.
+Confirm that PURVIEW_APP_ID matches its blueprint app ID.
+
+This is an Agent (Non AI Teammate) using user OBO, not a bot or
+AgentApplication. Reuse the existing AgentOboTokenProvider and
+signed-in user's assertion to obtain a delegated Microsoft Graph token.
+Preserve the existing sign-in, observability, and Work IQ integration.
+
+Check each prompt before adding it to model conversation history or
+calling the model or tools. On a policy block, show a clear DLP block
+message and stop the turn. Use fail-closed behaviour on errors, with
+a distinct service-error message so it cannot be mistaken for a policy match.
+Enable output audit, but do not claim it blocks sensitive responses.
+
+Enable the guard in the launch profile I use, resolve Content.Process.User
+on the actual agent identity's delegated Graph grant, preserve existing
+consents, build, and show me how to verify both a blocked and an allowed turn.
+Ask before making tenant permission changes. Do not print tokens or secrets.
+```
+
+**What the skill does**
+
+The skill supplies a .NET guard and integrates `processContent` around the agent turn. Its default .NET wiring targets `AgentApplication`; this lab uses **Blazor Server** instead. The assistant must adapt the guard to the existing OBO flow rather than add bot hosting or replace authentication.
+
+Review these changes before continuing:
+
+| Area | Expected change |
+| --- | --- |
+| Guard and registration | A Purview guard, for example `Purview/PurviewGuard.cs`, registered through dependency injection in `Program.cs` |
+| Chat handler | `Components/Pages/Home.razor` evaluates input before storing it in model history or calling the model; a block returns immediately with a user-visible explanation |
+| Graph authentication | The existing `AgentOboTokenProvider` requests `https://graph.microsoft.com/.default` using the signed-in user's assertion; the resulting delegated token contains `Content.Process.User` |
+| Permission handoff | The administrator appends the delegated permission to the grant used by the **agent identity**, verifying the actual token principal and preserving existing permissions |
+| Runtime configuration | `PURVIEW_DLP_ENABLED=true`, `PURVIEW_FAIL_MODE=closed`, and `PURVIEW_CHECK_OUTPUT=true` in the selected `Properties/launchSettings.json` profile's `environmentVariables`, or the host's process environment |
+| Policy scope | `PURVIEW_APP_ID` resolves to the blueprint app ID selected in Step 2, with the correct tenant and display name |
+
+**Behind the scenes**
+
+The input guard sends an `uploadText` activity to Microsoft Graph's `processContent` API using the delegated token and the `/me/dataSecurityAndGovernance/processContent` path. Purview evaluates the policies covering the supplied app ID. The app enforces a returned block by ending the turn **before inference**, rather than asking the model to refuse.
+
+The policy app ID and the principal receiving Graph consent have different purposes: the **blueprint app ID** selects the policy scope; the **agent identity** in this OBO flow needs the delegated Graph grant. Do not grant the permission to the unrelated web sign-in app or use a blueprint app-only token as a replacement. Never run blanket `az ad app permission admin-consent` on the blueprint: it can narrow existing agentic consent and break sign-in.
+
+For .NET, a `.env` file or an `appsettings.json` key alone is not sufficient for the skill's environment-driven guard. Verify that the running process sees the enablement settings. Keep secrets in the existing secret store, not in `launchSettings.json`.
+
+Output checks submit responses for **audit only** with this policy workload. They do not filter sensitive model responses. With fail-closed behaviour, a failed output audit can still withhold the reply; Purview errors, timeouts, or missing sign-in must not be reported as successful policy matches.
+
+**How to verify**
+
+Have the assistant build the project and confirm that the guard is enabled and obtains the delegated Graph token without logging it. Resolve permission or build failures before testing. A successful build does not prove that the policy is enforced; complete the live blocked-turn test below.
+
+### Step 4: Prove a policy block and an allowed turn
+
+1. Stop the old app and restart from the agent project folder so the rebuilt code and launch settings are loaded:
+
+   ```powershell
+   dotnet run
+   ```
+
+2. Open the local app and sign in. If the token cache or consent changed, sign out and back in. Keep the agent console visible and start a fresh conversation.
+3. Send this **synthetic, Luhn-valid test value**, including the words "credit card":
+
+   ```text
+   My test credit card number is 4111 1111 1111 1111.
+   ```
+
+4. Verify that the app shows a DLP block message instead of a generated answer. In the console, look for a policy match such as:
+
+   ```text
+   [purview] uploadText -> BLOCKED (HTTP 200, 1 policyAction(s), scopeState=modified, errors=0)
+   ```
+
+   More than one action can match if other policies apply. The important evidence is a blocking policy action and **zero processing errors**, not just HTTP 200 or the word "blocked".
+5. Confirm that this turn never enters the model call or runs a tool, using a debugger breakpoint at the inference call or correlated per-turn logs. If a conversation session is reused, confirm the rejected text was not added to its model history.
+6. Send a normal question in the same app:
+
+   ```text
+   What is Microsoft Entra Conditional Access? Include Microsoft Learn sources.
+   ```
+
+7. Confirm that Purview allows it and the agent produces its normal sourced answer. A generic model refusal, an authentication error, or every prompt being blocked does **not** prove the credit-card policy works.
+
+| Observed result | What to check |
+| --- | --- |
+| `allowed`, zero policy actions, zero errors for the test card | Policy propagation, exact app ID and tenant, enabled input-block rule, SIT confidence/count, billing, and DSPM onboarding |
+| `BLOCKED` with errors, or a service-unavailable message | Fail-closed handling, not a proven policy match; fix the Graph request, token, consent, or timeout first |
+| Graph returns 401/403 | Delegated Graph audience/scope, consent on the actual agent identity, and a fresh sign-in |
+| Guard disabled or no Purview log | Active launch profile/process environment and whether the app was rebuilt and restarted |
+| A policy block is logged but the model still runs | The input gate is too late or does not return immediately; fix it before declaring success |
+
+Do not rely on the policy's `DistributionStatus` alone; it can remain `Pending` even while a policy is live. Use the matched input-block action and the no-inference check as your evidence. Optionally inspect the corresponding activity in Purview Audit or DSPM AI activities.
+
+> **Checkpoint.** The synthetic credit-card prompt produces a verified Purview policy block and never reaches the model or tools. An ordinary Microsoft Learn question is allowed and answered. Record the test time, policy name, app ID, and sanitized evidence.
+
+If you created the policy only for this demo, agree on cleanup with the administrator. Disable or delete only this lab's policy and remove the lab guard configuration if you no longer need it. Keep the policy and code aligned: leaving the guard enabled without a matching policy does not preserve credit-card blocking. Do not change tenant-wide billing or shared policies as lab cleanup.
+
+---
+
 ## Troubleshooting
 
 | Symptom | Likely cause |
@@ -1152,6 +1308,8 @@ You have completed **Lab A365-02A**. You started with an ordinary web agent and 
 
 ✅ **Threat detection**: a prompt-injection attack on the agent turned into a Defender alert, and an incident notification rule that emails the security team.
 
+✅ **Data loss prevention**: a portal-created Purview credit-card policy enforced by an inline check, with a blocked prompt that never reaches the model and an ordinary prompt that still works.
+
 ### Main flow complete
 
 With Copilot Studio, the SDK requirements, and this .NET lab complete, you have finished the main lab flow. You can stop here. The [Python](./02b-web-obo-python.md) and [JavaScript / Node.js](./02c-web-obo-nodejs.md) labs are optional extensions if you want to explore another stack.
@@ -1169,3 +1327,4 @@ With Copilot Studio, the SDK requirements, and this .NET lab complete, you have 
 | Detect and protect AI agents in Defender | <https://learn.microsoft.com/defender-xdr/ai-agent-detection-protection> |
 | Real-time protection for AI agents | <https://learn.microsoft.com/defender-xdr/ai-agent-real-time-protection> |
 | Incident email notifications in Defender XDR | <https://learn.microsoft.com/defender-xdr/m365d-notifications-incidents> |
+| Purview data security and compliance for apps | <https://learn.microsoft.com/purview/developer/purview-data-security-genai> |
